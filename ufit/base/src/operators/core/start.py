@@ -3,6 +3,8 @@ import shutil
 import zipfile
 from datetime import datetime
 import bpy
+import bmesh
+from mathutils import Vector
 from .checkpoints import (
     recalc_ufit_paths,
     set_active_step,
@@ -180,3 +182,18 @@ def import_3d_file(context, filepath):
 
     # apply scaling
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    # Print the total surface area
+    total_area = sum(f.area for f in bpy.context.active_object.data.polygons)
+    print("Total Surface Area:", total_area)
+    if total_area > 10:
+        raise Exception(f"Surface area exceeds the limit. Please select a smaller model")
+
+
+
+
+
+
+
+
