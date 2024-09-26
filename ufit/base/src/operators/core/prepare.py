@@ -236,6 +236,9 @@ def save_rotation(context):
     general.apply_transform(ufit_obj, use_location=True, use_rotation=True, use_scale=True)
 
 
+def rotate_part_of_model(context):
+    pass
+
 #################################
 # Circumferences
 #################################

@@ -65,6 +65,7 @@ ufit_scene_properties = [
     'ufit_sculpt_mode',
     'ufit_sculpt_tool',
     'ufit_vertex_color_all',
+    'ufit_rotate_part_of_model',
     'ufit_smooth_factor',
     'ufit_push_pull_circular',
     'ufit_extrude_amount',
@@ -234,6 +235,9 @@ def register():
                                                       update=callbacks.update_colors_enable)
     bpy.types.Scene.ufit_vertex_color_all = BoolProperty(name="Highlight Whole Object", default=False,
                                                          update=callbacks.update_vertex_color_all)
+    bpy.types.Scene.ufit_rotate_part_of_model = BoolProperty(name="Modify Scan (Rotation)", 
+                                                             default=False, 
+                                                             update=callbacks.rotate_part_of_model)
     bpy.types.Scene.ufit_smooth_factor = IntProperty(name="Factor", min=0, max=50, step=1, default=15)
     bpy.types.Scene.ufit_push_pull_circular = BoolProperty(name="Circular Push/Pull", default=True)
     bpy.types.Scene.ufit_extrude_amount = FloatProperty(name="Amount", min=0, max=100.0, step=50, default=3.5)
@@ -507,3 +511,5 @@ def unregister():
     # export
     del bpy.types.Scene.ufit_smooth_borders
     del bpy.types.Scene.ufit_show_inner_part
+
+    del bpy.types.Scene.ufit_rotate_part_of_model

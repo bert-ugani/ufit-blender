@@ -376,3 +376,40 @@ def enum_previews_for_assistance(self, context):
         return enum_previews
 
     return []
+
+
+def rotate_part_of_model(self, context):
+    ufit_obj = bpy.data.objects['uFit']
+
+    # Select object mode
+    general.activate_object(context, ufit_obj, mode='OBJECT')
+
+    if not self.ufit_rotate_part_of_model:
+        # Restore quad view
+        user_interface.set_quad_view(True)
+
+        # Permanently apply changes to the uFit object
+        bpy.ops.object.modifier_apply({"object": ufit_obj}, modifier='Lattice')
+
+        # Remove lattice
+        lattice_obj = bpy.data.objects["Lattice"]
+        general.activate_object(context, lattice_obj, mode='OBJECT')
+        bpy.ops.object.delete()
+
+        # Remove lattice modifier
+        general.remove_all_modifiers(ufit_obj)
+
+        # Activate the uFit object
+        general.activate_object(context, ufit_obj, mode='OBJECT')
+
+    else:
+        # Remove quad view
+        user_interface.set_quad_view(False)
+
+        # Add lattice modifier to the uFit object, only small changes allowed (strength=0.2)
+        lattice_obj = general.add_lattice_modifier(context, ufit_obj, strength=0.2)
+
+        # Activate built-in rotation tool
+        general.activate_object(context, lattice_obj, mode='EDIT')
+        bpy.ops.wm.tool_set_by_id(name="builtin.select_box")
+        user_interface.set_active_tool('builtin.rotate')

@@ -1287,3 +1287,40 @@ def get_all_cutout_edges(context):
         vgs.append(f'cutout_edge_{i}')
 
     return vgs
+
+def add_lattice_modifier(context, obj, strength=1.0, grid_factor=0.025):
+    mesh = obj.data
+
+    # Create lattice
+    bpy.ops.object.add(type='LATTICE')
+    lattice = context.active_object
+
+    # Determine the size of the object
+    max_values = np.array([-float('inf'), -float('inf'), -float('inf')])
+    min_values = np.array([float('inf'), float('inf'), float('inf')])
+
+    for vert in mesh.vertices:
+        coordinates = np.array(obj.matrix_world @ vert.co)
+        max_values = np.maximum(coordinates, max_values)
+        min_values = np.minimum(coordinates, min_values)
+
+    # Set lattice properties (adusted to the object size)
+    resolution_values = (max_values - min_values) / grid_factor
+    lattice.data.points_u = int(resolution_values[0])
+    lattice.data.points_v = int(resolution_values[1])
+    lattice.data.points_w = int(resolution_values[2])
+    lattice.scale = max_values - min_values
+    lattice.location = (max_values + min_values) /2
+
+    # Update the scene to reflect the changes
+    bpy.context.view_layer.update()
+
+    # Add lattice modifier to object
+    context.view_layer.objects.active = obj
+    lattice_modifier = context.object.modifiers.new("", 'LATTICE')
+    lattice_modifier.object = lattice
+
+    # Limit the blending between original and deformed vertex positions (default value=1.0)
+    lattice_modifier.strength = strength
+
+    return lattice

@@ -207,6 +207,10 @@ fs_operator_consts = {
         'checkpoint': None,
         'next_step': None
     },
+    'rotate_part_of_model': {
+        'checkpoint': None,
+        'next_step': None
+    },
     'rotate': {
         'checkpoint': {
             'name': 'rotate',
